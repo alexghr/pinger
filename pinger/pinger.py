@@ -1,19 +1,19 @@
 from asyncio import get_event_loop
 from ping import ping
 import display
+from store import Store
+from config import IP, DELAY
 
 loop = get_event_loop()
 
-IP = "1.1.1.1"
-DELAY = 10
+store = Store()
 
-tick_num = 0
 def tick():
-    global tick_num
-    tick_num += 1
-
     res = ping(IP)
-    display.render(tick_num, res, IP)
+    store.update(res)
+
+    display.render(store.state())
+
     loop.call_later(DELAY, tick)
 
 try:
